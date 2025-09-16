@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Node {
     private String nome;
+    private Node pai;
     private ArrayList<Node> filhos;  // lista dinâmica
 
     public Node(String nome) {
@@ -10,7 +11,9 @@ public class Node {
     }
 
     public void setFilho(String filho) {
-        this.filhos.add(new Node(filho));  // adiciona dinamicamente
+        Node aux = new Node(filho);
+        aux.setPai(this);
+        this.filhos.add(aux);  // adiciona dinamicamente
     }
 
     public int getQuant_filhos() {
@@ -21,7 +24,18 @@ public class Node {
         return nome;
     }
 
+    private void setPai(Node pai) {
+        this.pai = pai;
+    }
+
     public Node getFilho(int i) {
         return filhos.get(i);
+    }
+
+    public Node getPai() {
+        return pai;
+    }
+    public ArrayList<Node> getFilhos() {
+        return filhos;
     }
 }
