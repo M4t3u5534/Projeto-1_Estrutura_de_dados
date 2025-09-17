@@ -1,143 +1,128 @@
-import java.lang.Math;
 import java.util.ArrayList;
 
 public class arvore {
-    private Node raiz;
-    ArrayList<Node> pessoas;
+    ArrayList<Pessoa> familia;
 
-    // construtor
+
+    //array list de membros da familia (evita duplicatas)
     public arvore() {
-        this.raiz = null;
-        pessoas = new ArrayList<Node>();
+        familia = new ArrayList<Pessoa>();
     }
 
-    public Node buscaPessoa(String nome) {
-        for (int i = 0; i < pessoas.size(); i++) {
-            if (pessoas.get(i).nome.equals(nome)) return pessoas.get(i);
+
+    // busca no array da familia
+    public Pessoa buscaMembro(String nome) {
+        for (int i = 0; i < familia.size(); i++) {
+            if (familia.get(i).nome.equals(nome)) return familia.get(i);
         }
         return null;
     }
 
-    public Node atualizaPessoas(String nome) {
+    public Pessoa atualizaFamilia(String nome) {
         // primeiro procura para não adicionar duplicata
-        Node p = buscaPessoa(nome);
+        Pessoa p = buscaMembro(nome);
         if (p == null) {
-            p = new Node(nome);
-            pessoas.add(p);
+            p = new Pessoa(nome);
+            familia.add(p);
         }
         return p;
     }
 
+    // define relação pai e filho, cria membros e atualiza array da familia
     public void insert(String filhoNome, String paiNome) {
-        Node filho = atualizaPessoas(filhoNome);
-        Node pai = atualizaPessoas(paiNome);
-        pai.setFilho(filho);
+        Pessoa filho = atualizaFamilia(filhoNome);
+        Pessoa pai = atualizaFamilia(paiNome);
+        pai.adFilho(filho);
     }
 
-    public void consultaParentesco(String nome1, String nome2){
-        Node p1 = getNode(nome1);
-        System.out.println("p1");
-        Node p2 = getNode(nome2);
-        System.out.println("p2");
-        int d1 = getDescendencia(p1,p2);
-        System.out.println("d1");
-        int d2 = getDescendencia(p2,p1);
-        System.out.println("d2");
-        if (d1 > d2) {
-            if (d1 == 0) System.out.println("filho");
-            else if (d1 == 1) System.out.println("neto");
-            else if (d1 == 2) System.out.println("bisneto");
-            else {
-                for (int i = 0; i < d1-1; i++) {
-                    System.out.print("ta");
-                }
-                System.out.println("raneto");
-            }
-        } else if (d2 > d1) {
-            if (d1 == 0) System.out.println("pai");
-            else if (d1 == 1) System.out.println("avo");
-            else if (d1 == 2) System.out.println("bisavo");
-            else {
-                for (int i = 0; i < d1-1; i++) {
-                    System.out.print("ta");
-                }
-                System.out.println("ravo");
-            }
-        } else{
-            if (p1.getPai() == p2.getPai()) System.out.println("irmao");
-            else {
-                int n;
-                Node r = achaAncestralComum(p1, p2);
-                if (getNivel(p1) < getNivel(p2)) {
-                    n = getNivel(p1) - getNivel(r) - 1;
-                } else {
-                    n = getNivel(p2) - getNivel(r) - 1;
-                }
-                int grau = Math.abs(getNivel(p1)-getNivel(p2));
-                System.out.printf("primo-%d em grau %d\n", n, grau);
-            }
+
+    // pega todos os ancestrais do membro da familia
+    private ArrayList<Pessoa> getAncestrais(Pessoa p) {
+        ArrayList<Pessoa> lista = new ArrayList<Pessoa>();
+        Pessoa atual = p;
+        while (atual != null) {
+            lista.add(atual);
+            atual = atual.pai;
         }
+        return lista;
     }
 
-    private Node achaAncestralComum(Node m, Node n){
-        int nivelm = getNivel(m);
-        int niveln = getNivel(n);
-        if (m != n) {
-            if (nivelm > niveln) return achaAncestralComum(m.getPai(), n);
-            else return achaAncestralComum(m, n.getPai());
-        } else return m;
+    // retorna n (nível do ascendente em comum) e m (diferença de nivel entre membros)
+    private int[] defPrimo(Pessoa p1, Pessoa p2) {
+        ArrayList<Pessoa> ancestrais1 = getAncestrais(p1);
+        ArrayList<Pessoa> ancestrais2 = getAncestrais(p2);
+
+        int i = ancestrais1.size() - 1;
+        int j = ancestrais2.size() - 1;
+
+        // achar o ascendente em comum mais próximo (atualiza i e j -> menor valor entre eles é o nível do ascendente comum)
+        Pessoa ancComum = null;
+        while (i >= 0 && j >= 0 && ancestrais1.get(i) == ancestrais2.get(j)) {
+            ancComum = ancestrais1.get(i);
+            i--;
+            j--;
+        }
+
+        if (ancComum == null || ancComum == p1 || ancComum == p2) return null; // não são primos
+
+        int m = Math.abs(i - j);   // diferença de níveis
+        int n = Math.min(i, j); // nivel do ascendente comum
+        return new int[]{n, m};
     }
 
-    private int getNivel(Node n){
-        if (n.getPai() == null) {
-            return 0;
-        } else {
-            return getNivel(n.getPai()) + 1;
+    // distancia em níveisentre
+    private int distanciaParente(Pessoa filho, Pessoa ascendente) {
+        int distancia = 0;
+        Pessoa atual = filho.pai;
+        // enquanto o pai do membro atual não for null
+        while (atual != null) {
+            distancia++;
+            if (atual == ascendente) return distancia;
+            atual = atual.pai; // vai subindo
         }
+        return -1;
+    }
+    private String descendente(int n) {
+        if (n == 1) return "filho";
+        if (n == 2) return "neto";
+        if (n == 3) return "bisneto";
+        if (n == 4) return "tataraneto";
+        // TODO tatatatatatatatatataat
+        return "tatatatatatatata";
     }
 
-    private int getDescendencia(Node p, Node q){
-        if (p.getPai() == null) {
-            return -1;
-        }else if (p.getPai() == q) {
-            return 0;
-        } else {
-            return getDescendencia(p.getPai(),q) + 1;
-        }
+    private String ascendente(int n) {
+        if (n == 1) return "pai";
+        if (n == 2) return "avô";
+        if (n == 3) return "bisavô";
+        if (n == 4) return "tataravô";
+        // TODO tatatatatatatatatataat
+        return "tattatatatataatatat";
     }
 
-    private Node getNode(String nome){
-        Node base = raiz;
-        System.out.println("raiz do get node" + raiz);
-        System.out.println("nome do get node " + nome);
-        Node aux = getNode(nome, base);
-        System.out.println("get node aux: " + aux);
-        return aux;
-    }
+    public String consultParentesco(String nome1, String nome2) {
+        // caso 0: membros fora da família
+        Pessoa p1 = buscaMembro(nome1);
+        Pessoa p2 = buscaMembro(nome2);
+        if (p1 == null || p2 == null) return "sem relacao";
 
-    private Node getNode(String nome, Node base){
-        System.out.println("get node absurdo printando tudojksasduifbgajk");
-        if (base == null) {
-            System.out.println("base se null: " + base);
-            return null;
-        }
-        
-        int i=0;
-        System.out.println("debug getnode" + (i));
-        i+=1;
+        // caso 1: descendentes ou ascendentes (filho - pai - neto ...)
+        int d1 = distanciaParente(p1, p2);
+        int d2 = distanciaParente(p2, p1);
+        if (d1 > 0) return descendente(d1);
+        if (d2 > 0) return ascendente(d2);
 
-        if (base.getNome().equals(nome)) {
-            return base;
+        // caso 2: irmãos
+        if (p1.pai != null && p1.pai == p2.pai) return "irmao";
+
+        // caso 3: primos
+        int[] primo = defPrimo(p1, p2);
+        if (primo != null) {
+            if (primo[1] == 0) return "primo-" + primo[0];
+            return "primo-" + primo[0] + " em grau " + primo[1];
         }
 
-        for (Node filho : base.getFilhos()) {
-            Node achado = getNode(nome, filho);
-            if (achado != null){
-                return achado;
-            }
-        }
-        System.out.println("comida");
-        return base;
+        return "sem relacao";
     }
 
 }
