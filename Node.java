@@ -16,6 +16,10 @@ public class Node {
         this.filhos.add(aux);  // adiciona dinamicamente
     }
 
+    public void setFilho(Node filhos) {
+        this.filhos.add(filhos);
+    }
+
     public int getQuant_filhos() {
         return filhos.size(); // tamanho da lista
     }

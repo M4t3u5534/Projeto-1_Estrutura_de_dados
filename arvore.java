@@ -15,6 +15,12 @@ public class arvore {
 
     // versão COM o parâmetro extra
     public boolean insert(String pai, String filho, Node base) {
+        if (this.raiz.getNome() == filho) {
+            Node aux = this.raiz;
+            this.raiz = new Node(pai);
+            this.raiz.setFilho(filho);
+        }
+        
         if (base == null) {
             this.raiz = new Node(pai);
             this.raiz.setFilho(filho);

@@ -12,7 +12,7 @@ Referência utilizada: https://www.datacamp.com/pt/doc/java/read-files
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        ArvoreGenealogica arvore = new ArvoreGenealogica();
+        arvore arvore = new arvore();
 
         // leitura de arquivo entrada.txt
         BufferedReader br = new BufferedReader(new FileReader("entrada.txt"));
@@ -20,7 +20,7 @@ public class Main {
         while ((linha = br.readLine()) != null) {
             String[] partes = linha.split("\\s+"); // separa por espaços
             if (partes.length == 2) {
-                arvore.defRelacao(partes[0], partes[1]);
+                arvore.insert(partes[0], partes[1]);
             }
         }
         br.close();
@@ -51,8 +51,7 @@ public class Main {
         };
 
         for (String[] consulta : consultas) {
-            String resultado = arvore.parentesco(consulta[0], consulta[1]);
-            System.out.println(consulta[0] + "  " + consulta[1] + ": " + resultado);
+            arvore.consultaParentesco(consulta[0], consulta[1]);
         }
         
     }
