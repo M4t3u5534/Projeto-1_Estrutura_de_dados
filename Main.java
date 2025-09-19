@@ -15,16 +15,18 @@ public class Main {
         arvore arvore = new arvore();
 
         // leitura de arquivo entrada.txt
-        BufferedReader br = new BufferedReader(new FileReader("entrada.txt"));
-        String linha;
-        while ((linha = br.readLine()) != null) {
-            String[] partes = linha.split("\\s+"); // separa por espaços
-            if (partes.length == 2) {
-                arvore.insert(partes[0], partes[1]);
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("entrada.txt"));
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.trim().split("\\s+");
+                if (partes.length == 2) {
+                    // Formato: filho pai
+                    arvore.insert(partes[0], partes[1]);
+                }
             }
+            br.close();
         }
-        br.close();
-
         /* leitura de arquivo consultas.txt  
         BufferedReader consultas = new BufferedReader(new FileReader("consultas.txt"));
         while ((linha = consultas.readLine()) != null) {
