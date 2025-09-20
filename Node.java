@@ -11,13 +11,13 @@ public class Node {
     }
 
     public void setFilho(String filho) {
-        Node aux = new Node(filho);
-        aux.setPai(this);
-        this.filhos.add(aux);  // adiciona dinamicamente
-    }
-
-    public void setFilho(Node filhos) {
-        this.filhos.add(filhos);
+        if (filhos.size() >= 2) {
+            System.out.println(nome + " ja tem 2 filhos");
+        } else {
+            Node aux = new Node(filho);
+            aux.setPai(this);
+            this.filhos.add(aux);
+        }
     }
 
     public int getQuant_filhos() {
@@ -28,9 +28,9 @@ public class Node {
         return nome;
     }
 
-    public void setPai(Node pai) {
+    private void setPai(Node pai) {
         this.pai = pai;
-}
+    }
 
     public Node getFilho(int i) {
         return filhos.get(i);
