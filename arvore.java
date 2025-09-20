@@ -54,7 +54,6 @@ public class arvore {
             else if (d1 == 1) System.out.println("neto");
             else if (d1 == 2) System.out.println("bisneto");
             else {
-                String relacao = "";
                 for (int i = 0; i < d1-1; i++) {
                     System.out.print("ta");
                 }
@@ -65,7 +64,6 @@ public class arvore {
             else if (d2 == 1) System.out.println("avo");
             else if (d2 == 2) System.out.println("bisavo");
             else {
-                String relacao = "";
                 for (int i = 0; i < d2-1; i++) {
                     System.out.print("ta");
                 }
