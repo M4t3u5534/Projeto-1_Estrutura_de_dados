@@ -1,8 +1,0 @@
-carlos.souza bob.constable
-heitor.maciel joao.silva
-heitor.maciel carlos.souza
-les.valiant joao.silva
-les.valiant dennis.ritchie
-dennis.ritchie les.valiant
-patricia.fischer michael.rabin
-les.valiant oswaldo.veblen
