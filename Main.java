@@ -1,3 +1,7 @@
+// Nome: Gabriel Mires Camargo RA: 10436741
+// Nome: Mateus Ribeiro Cerqueira RA: 10443901
+// Nome: Pedro Henrique Carvalho Pereira RA: 10418861
+
 import java.io.*;
 import java.util.Scanner;
 import java.util.ArrayList;
